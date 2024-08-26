@@ -10,6 +10,8 @@ services:
     container_name: "pgsql.prod"
     environment:
       POSTGRES_DB: 'dnevnik_rg'
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - ./migrations/schema.sql:/docker-entrypoint-initdb.d/schemas.sql
       - ./flyway/sql:/flyway/sql
@@ -17,6 +19,7 @@ services:
     ports:
       - "5588:5432"
   flyway-prod:
+    container_name: "flyway.prod"
     image: flyway/flyway:10.11
     depends_on:
       - postgres-prod
