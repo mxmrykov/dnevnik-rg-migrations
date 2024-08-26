@@ -2,30 +2,29 @@ version:
   "3.8"
 
 services:
-  ######
-  # PROD
-  ######
   postgres-prod:
-    image: postgres:14.0
-    container_name: "pgsql.prod"
+    build:
+      context: .
+      dockerfile: Dockerfile-prod-sql
+    image: postgres:latest
+    container_name: "dnevnik-rg-prod-db"
     environment:
       POSTGRES_DB: 'dnevnik_rg'
-      POSTGRES_USER: 'dnevnik_rg_user_prod'
-      POSTGRES_PASSWORD: 'NDY1Yzg2YjQtNDQzMy00OWQzLTkxODgtMGNkNmQ3Nzc4MmMx'
-    volumes:
-      - ./migrations/schema.sql:/docker-entrypoint-initdb.d/schemas.sql
-      - ./flyway/sql:/flyway/sql
-    command: [ "docker-entrypoint.sh", "postgres" ]
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5588:5432"
+
   flyway-prod:
-    image: flyway/flyway:10.11
+    container_name: "flyway.prod"
+    build:
+      context: .
+      dockerfile: Dockerfile-prod-flyway
     depends_on:
       - postgres-prod
-    volumes:
-      - ./migrations/prod/sql:/flyway/sql
+    image: flyway/flyway:10.11
     env_file:
       - ./migrations/prod/env/.env
     environment:
       - FLYWAY_LOCATIONS="filesystem:/flyway/sql"
-    entrypoint: [ "sh", "-c", "/flyway/flyway -url=jdbc:postgresql://pgsql.prod:5432/dnevnik_rg -user=dnevnik_rg_user_prod -password=NDY1Yzg2YjQtNDQzMy00OWQzLTkxODgtMGNkNmQ3Nzc4MmMx -locations=filesystem:/flyway/sql -connectRetries=3 migrate" ]
+    entrypoint: [ "sh", "-c", "/flyway/flyway -url=jdbc:postgresql://dnevnik-rg-prod-db:5432/dnevnik_rg -user=${POSTGRES_USER} -password=${POSTGRES_PASSWORD} -locations=filesystem:/flyway/sql -connectRetries=3 migrate" ]
