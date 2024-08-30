@@ -20,9 +20,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-prod-flyway
+    image: flyway/flyway:10.11
     depends_on:
       - postgres-prod
-    image: flyway/flyway:10.11
     env_file:
       - ./migrations/prod/env/.env
     environment:
