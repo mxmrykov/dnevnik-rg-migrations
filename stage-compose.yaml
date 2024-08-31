@@ -24,7 +24,7 @@ services:
     depends_on:
       - postgres-stage
     env_file:
-      - ./migrations/stage/env/.env
+      - ./migrations/.env.stage
     environment:
       - FLYWAY_LOCATIONS="filesystem:/flyway/sql"
     entrypoint: [ "sh", "-c", "/flyway/flyway -url=jdbc:postgresql://dnevnik-rg-stage-db:5432/dnevnik_rg -user=${POSTGRES_USER} -password=${POSTGRES_PASSWORD} -locations=filesystem:/flyway/sql -connectRetries=3 migrate" ]

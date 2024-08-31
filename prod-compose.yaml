@@ -20,11 +20,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-prod-flyway
+    image: flyway/flyway:10.11
     depends_on:
       - postgres-prod
-    image: flyway/flyway:10.11
     env_file:
-      - ./migrations/prod/env/.env
+      - ./migrations/.env.prod
     environment:
       - FLYWAY_LOCATIONS="filesystem:/flyway/sql"
     entrypoint: [ "sh", "-c", "/flyway/flyway -url=jdbc:postgresql://dnevnik-rg-prod-db:5432/dnevnik_rg -user=${POSTGRES_USER} -password=${POSTGRES_PASSWORD} -locations=filesystem:/flyway/sql -connectRetries=3 migrate" ]
