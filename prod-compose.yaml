@@ -24,7 +24,7 @@ services:
     depends_on:
       - postgres-prod
     env_file:
-      - ./migrations/prod/env/.env
+      - ./migrations/.env.prod
     environment:
-      - FLYWAY_LOCATIONS="filesystem:/flyway/prod/sql"
-    entrypoint: [ "sh", "-c", "/flyway/flyway -url=jdbc:postgresql://dnevnik-rg-prod-db:5432/dnevnik_rg -user=${POSTGRES_USER} -password=${POSTGRES_PASSWORD} -locations=filesystem:/flyway/prod/sql -connectRetries=3 migrate" ]
+      - FLYWAY_LOCATIONS="filesystem:/flyway/sql"
+    entrypoint: [ "sh", "-c", "/flyway/flyway -url=jdbc:postgresql://dnevnik-rg-prod-db:5432/dnevnik_rg -user=${POSTGRES_USER} -password=${POSTGRES_PASSWORD} -locations=filesystem:/flyway/sql -connectRetries=3 migrate" ]
